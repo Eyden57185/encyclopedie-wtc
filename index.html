@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyden57185 / encyclopedie-wtc</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --link-color: #58a6ff;
+            --accent-color: #238636;
+            --accent-hover: #2ea043;
+            --font-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            padding: 0;
+        }
+
+        header {
+            background-color: #010409;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+        }
+
+        .avatar-placeholder {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #8a2be2, #ff1493);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+        }
+
+        .repo-title a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        .repo-title a:hover {
+            text-decoration: underline;
+        }
+
+        .repo-title span {
+            color: var(--text-secondary);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .repo-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            padding-bottom: 0;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-tab.active {
+            border-bottom-color: #f78166;
+            color: var(--text-primary);
+        }
+
+        .nav-tab:hover:not(.active) {
+            border-bottom-color: var(--border-color);
+        }
+
+        .file-explorer {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .file-explorer-header {
+            background-color: #161b22;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .file-list {
+            list-style: none;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-item:hover {
+            background-color: rgba(177, 186, 196, 0.08);
+        }
+
+        .file-icon {
+            margin-right: 8px;
+            color: var(--text-secondary);
+            width: 16px;
+            text-align: center;
+        }
+
+        .file-name {
+            color: var(--link-color);
+            flex-grow: 1;
+            text-decoration: none;
+        }
+
+        .file-name:hover {
+            text-decoration: underline;
+        }
+
+        .file-meta {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .readme-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .readme-header {
+            background-color: #161b22;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .readme-body {
+            padding: 32px;
+            font-size: 15px;
+        }
+
+        .readme-body h1 {
+            font-size: 2em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: .3em;
+            margin-bottom: 16px;
+            margin-top: 24px;
+        }
+
+        .readme-body h1:first-child {
+            margin-top: 0;
+        }
+
+        .readme-body h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: .3em;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        .readme-body h3 {
+            font-size: 1.25em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .readme-body p {
+            margin-bottom: 16px;
+        }
+
+        .readme-body ul, .readme-body ol {
+            padding-left: 2em;
+            margin-bottom: 16px;
+        }
+
+        .readme-body li {
+            margin-bottom: 6px;
+        }
+
+        .readme-body blockquote {
+            padding: 0 1em;
+            color: var(--text-secondary);
+            border-left: 0.25em solid var(--border-color);
+            margin: 0 0 16px 0;
+        }
+
+        .readme-body code {
+            font-family: var(--font-mono);
+            background-color: rgba(110, 118, 129, 0.4);
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+            font-size: 85%;
+        }
+
+        .readme-body pre {
+            background-color: #161b22;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 85%;
+            margin-bottom: 16px;
+        }
+
+        .readme-body pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge {
+            background-color: #238636;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tag {
+            background-color: rgba(56, 139, 253, 0.15);
+            color: var(--link-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        .section-view {
+            display: none;
+        }
+
+        .section-view.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="avatar-placeholder">E</div>
+            <div class="repo-title">
+                <a href="#" onclick="switchTab('code'); return false;">Eyden57185</a> / <strong>encyclopedie-wtc</strong>
+            </div>
+            <span class="badge">Public</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text-secondary);">
+            Projet Minecraft & Histoire WTC
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="repo-nav">
+            <a href="#" class="nav-tab active" id="tab-code" onclick="switchTab('code'); return false;">
+                📁 Code
+            </a>
+            <a href="#" class="nav-tab" id="tab-wtc" onclick="switchTab('wtc'); return false;">
+                📖 Documentation WTC & 11 Septembre
+            </a>
+            <a href="#" class="nav-tab" id="tab-minecraft" onclick="switchTab('minecraft'); return false;">
+                ⛏️ Projet Minecraft
+            </a>
+        </div>
+
+        <!-- VUE CODE / EXPLORATEUR -->
+        <div id="view-code" class="section-view active">
+            <div class="stats-bar">
+                <div class="stat-item"><span class="tag">Markdown</span></div>
+                <div class="stat-item"><span>1 branche</span></div>
+                <div class="stat-item"><span>0 tags</span></div>
+            </div>
+
+            <div class="file-explorer">
+                <div class="file-explorer-header">
+                    <div><strong>Eyden57185</strong> Initial commit</div>
+                    <div style="font-family: var(--font-mono); font-size: 12px;">commit 7f8a92c</div>
+                </div>
+                <ul class="file-list">
+                    <li class="file-item" onclick="switchTab('wtc')">
+                        <span class="file-icon">📄</span>
+                        <span class="file-name">README.md</span>
+                        <span class="file-meta">Documentation complète World Trade Center</span>
+                    </li>
+                    <li class="file-item" onclick="switchTab('minecraft')">
+                        <span class="file-icon">📁</span>
+                        <span class="file-name">minecraft-build/</span>
+                        <span class="file-meta">Schématics, WorldEdit & maquettes</span>
+                    </li>
+                    <li class="file-item" onclick="switchTab('wtc')">
+                        <span class="file-icon">📄</span>
+                        <span class="file-name">historique-construction.txt</span>
+                        <span class="file-meta">Détails techniques de l'OWTC (1966 - 1973)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="readme-box">
+                <div class="readme-header">
+                    <span>📖</span> README.md
+                </div>
+                <div class="readme-body">
+                    <h1>Encyclopédie & Reconstruction WTC (Minecraft)</h1>
+                    <p>Bienvenue sur le dépôt GitHub officiel de mon projet sur le <strong>World Trade Center (WTC)</strong> et les Tours Jumelles, recréé avec passion et précision.</p>
+                    
+                    <h2>📑 Sommaire</h2>
+                    <ul>
+                        <li><a href="#" onclick="switchTab('wtc'); return false;" style="color: var(--link-color);">1. La Construction du World Trade Center (OWTC)</a></li>
+                        <li><a href="#" onclick="switchTab('wtc'); return false;" style="color: var(--link-color);">2. L'architecture des Tours Jumelles (WTC 1 & WTC 2)</a></li>
+                        <li><a href="#" onclick="switchTab('wtc'); return false;" style="color: var(--link-color);">3. Les événements tragiques du 11 septembre 2001</a></li>
+                        <li><a href="#" onclick="switchTab('minecraft'); return false;" style="color: var(--link-color);">4. Reproduction détaillée sur Minecraft</a></li>
+                    </ul>
+
+                    <h2>🚀 Accès rapide</h2>
+                    <p>Cliquez sur l'onglet <strong>Documentation WTC & 11 Septembre</strong> ci-dessus pour consulter le dossier complet, ou explorez les fichiers du dépôt.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VUE DOCUMENTATION WTC -->
+        <div id="view-wtc" class="section-view">
+            <div class="readme-box">
+                <div class="readme-header">
+                    <span>📖</span> README.md - Dossier Historique World Trade Center
+                </div>
+                <div class="readme-body">
+                    <h1>Le World Trade Center : Histoire, Construction et Tragédie</h1>
+                    
+                    <p>Le <strong>World Trade Center</strong> (souvent abrégé <strong>WTC</strong>) était un grand complexe de sept bâtiments situé dans le quartier financier de Lower Manhattan à New York, aux États-Unis. Il a ouvert le 4 avril 1973 et a été détruit lors des attentats du 11 septembre 2001.</p>
+
+                    <h2>1. La Construction (Original WTC / OWTC)</h2>
+                    <p>Le projet a été imaginé dès les années 1960 par l'Autorité portuaire de New York et du New Jersey. L'architecte principal était <strong>Minoru Yamasaki</strong> et l'ingénieur en structure était <strong>Leslie Robertson</strong>.</p>
+                    
+                    <ul>
+                        <li><strong>Début des travaux :</strong> 5 août 1966 (excavation du site et création de la « baignoire » pour retenir l'eau de l'Hudson).</li>
+                        <li><strong>Inauguration :</strong> 4 avril 1973 pour la Tour Nord (WTC 1) et 1972 pour la Tour Sud (WTC 2).</li>
+                        <li><strong>Innovations structurelles :</strong> Contrairement aux gratte-ciels traditionnels soutenus par des colonnes internes denses, les Tours Jumelles utilisaient un concept de <em>colonne tubulaire porteuse</em> avec une façade constituée de colonnes d'acier espacées de près en près, combinée à un noyau central robuste. Cela offrait des plateaux de bureaux entièrement ouverts sans cloisons porteuses intérieures.</li>
+                    </ul>
+
+                    <h2>2. Les Tours Jumelles (WTC 1 et WTC 2)</h2>
+                    <ul>
+                        <li><strong>WTC 1 (Tour Nord) :</strong> Haute de 417 mètres (417 m au toit, 526 m avec l'antenne de télévision ajoutée en 1978). Elle était le bâtiment le plus haut du monde à sa construction.</li>
+                        <li><strong>WTC 2 (Tour Sud) :</strong> Haute de 415 mètres. Elle comportait une terrasse d'observation publique très populaire au sommet (<em>Top of the World Trade Center</em>).</li>
+                        <li>Le complexe comprenait également 5 autres bâtiments : WTC 3 (hôtel Marriott), WTC 4, WTC 5, WTC 6 et WTC 7.</li>
+                    </ul>
+
+                    <h2>3. Les Attentats du 11 septembre 2001</h2>
+                    <p>Le matin du 11 septembre 2001, quatre avions de ligne commerciaux ont été détournés par des terroristes d'Al-Qaïda :</p>
+                    <ul>
+                        <li><strong>8 h 46 :</strong> Le vol 11 American Airlines s'encastre dans la façade nord de la Tour Nord (WTC 1).</li>
+                        <li><strong>9 h 03 :</strong> Le vol 175 United Airlines s'encastre dans la façade sud de la Tour Sud (WTC 2).</li>
+                        <li><strong>9 h 59 :</strong> Effondrement de la Tour Sud (WTC 2) après environ 56 minutes d'incendie généralisé alimenté par le kéburant et les matériaux de bureau.</li>
+                        <li><strong>10 h 28 :</strong> Effondrement de la Tour Nord (WTC 1) après 102 minutes d'incendie.</li>
+                        <li>Plus tard dans la journée (à 17 h 20), le WTC 7 s'effondre également en raison des dégâts structurels et des incendies prolongés.</li>
+                    </ul>
+                    <p>Cette tragédie a entraîné la mort de 2 977 victimes (hors terroristes) à New York, au Pentagone et à Shanksville, marquant un tournant historique mondial.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VUE MINECRAFT -->
+        <div id="view-minecraft" class="section-view">
+            <div class="readme-box">
+                <div class="readme-header">
+                    <span>⛏️</span> PROJET_MINECRAFT.md - Maquette et Construction Virtuelle
+                </div>
+                <div class="readme-body">
+                    <h1>Le Projet Minecraft : Reproduction des Tours Jumelles et du WTC</h1>
+                    
+                    <p>Ce projet consiste à recréer fidèlement à l'échelle et avec un grand niveau de détail l'ensemble du complexe du World Trade Center tel qu'il était avant 2001 dans <strong>Minecraft Java Edition</strong>.</p>
+
+                    <h2>🛠️ Outils et Méthodes utilisés</h2>
+                    <ul>
+                        <li><strong>WorldEdit :</strong> Indispensable pour générer les structures géantes, répéter les motifs de fenêtres sur les façades extérieures en acier et manipuler de grands volumes de blocs de béton et de verre.</li>
+                        <li><strong>Plans architecturaux :</strong> Utilisation des dimensions réelles (carrés de 63 mètres de côté pour chaque tour, espacement de la plaza) pour un respect rigoureux de l'échelle 1:1 ou à échelle adaptée.</li>
+                        <li><strong>Aménagement de la Plaza :</strong> Modélisation de la fontaine centrale (<em>The Sphere</em> de Fritz Koenig au milieu), des passerelles piétonnes, et des bâtiments environnants (WTC 4, 5, 6 et l'hôtel Marriott).</li>
+                    </ul>
+
+                    <h2>📸 Galerie et Étapes de construction</h2>
+                    <pre><code>[====================] Étape 1 : Fondations et baignoire du WTC (Terminé)
+[====================] Étape 2 : Structure porteuse de la Tour Nord WTC 1 (Terminé)
+[====================] Étape 3 : Structure porteuse de la Tour Sud WTC 2 (Terminé)
+[==============......] Étape 4 : Aménagement intérieur et antennes (En cours - 75%)
+[....................] Étape 5 : Intégration du WTC 7 et de la Plaza (Planifié)</code></pre>
+
+                    <p>Un projet minutieux pour rendre hommage à l'histoire architecturale de ces gratte-ciels emblématiques de New York à travers le jeu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Masquer toutes les vues
+            document.querySelectorAll('.section-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            // Désactiver tous les onglets
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Activer la vue et l'onglet correspondants
+            if (tabId === 'code') {
+                document.getElementById('view-code').classList.add('active');
+                document.getElementById('tab-code').classList.add('active');
+            } else if (tabId === 'wtc') {
+                document.getElementById('view-wtc').classList.add('active');
+                document.getElementById('tab-wtc').classList.add('active');
+            } else if (tabId === 'minecraft') {
+                document.getElementById('view-minecraft').classList.add('active');
+                document.getElementById('tab-minecraft').classList.add('active');
+            }
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
